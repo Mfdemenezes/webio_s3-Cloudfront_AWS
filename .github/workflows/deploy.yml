@@ -133,13 +133,8 @@ jobs:
       id: init
       run: terraform init
 
-    - name: Download Terraform Plan
-      uses: actions/download-artifact@v4
-      with:
-        name: tfplan
-
     - name: Terraform Apply
-      run: terraform apply -auto-approve tfplan
+      run: terraform apply -auto-approve
 
     - name: Get Terraform Outputs
       id: tf-outputs
