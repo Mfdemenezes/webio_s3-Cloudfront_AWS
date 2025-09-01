@@ -30,7 +30,7 @@ resource "aws_s3_bucket_website_configuration" "site" {
   }
 
   error_document {
-    key = "index.html"  # Para SPA routing
+    key = "index.html" # Para SPA routing
   }
 
   depends_on = [aws_s3_bucket_public_access_block.this]
@@ -128,9 +128,9 @@ resource "aws_cloudfront_distribution" "cdn" {
 # ---------------- S3 Policy: acesso público para website ----------------
 data "aws_iam_policy_document" "bucket_policy" {
   statement {
-    sid     = "PublicReadGetObject"
-    effect  = "Allow"
-    actions = ["s3:GetObject"]
+    sid       = "PublicReadGetObject"
+    effect    = "Allow"
+    actions   = ["s3:GetObject"]
     resources = ["${aws_s3_bucket.site.arn}/*"]
     principals {
       type        = "*"
