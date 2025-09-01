@@ -1,6 +1,12 @@
-# # 🌐 WebIO - Static Website with Terraform & AWS
+# # 🌐 WebIO - Static Website Hosting on AWS
 
-Projeto de website estático hospedado na AWS usando S3 + CloudFront, com deployment automatizado via GitHub Actions.
+Este projeto implementa uma solução completa de hospedagem de site estático
+na AWS usando S3, CloudFront e automação CI/CD.
+
+## 🚀 Pipeline Status
+
+A pipeline foi corrigida para executar o deploy automaticamente quando há
+mudanças na infraestrutura!
 
 ## 🏗️ Arquitetura
 
