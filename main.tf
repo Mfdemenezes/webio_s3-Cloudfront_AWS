@@ -12,13 +12,13 @@ resource "aws_s3_bucket_ownership_controls" "this" {
   rule { object_ownership = "BucketOwnerEnforced" }
 }
 
-# Bloqueia acesso público (será liberado para website)
+# Bloqueia acesso público (mantido para segurança - acesso apenas via CloudFront)
 resource "aws_s3_bucket_public_access_block" "this" {
   bucket                  = aws_s3_bucket.site.id
-  block_public_acls       = false
-  ignore_public_acls      = false
-  block_public_policy     = false
-  restrict_public_buckets = false
+  block_public_acls       = true
+  ignore_public_acls      = true
+  block_public_policy     = true
+  restrict_public_buckets = true
 }
 
 # Configuração de Website
@@ -125,16 +125,21 @@ resource "aws_cloudfront_distribution" "cdn" {
   ]
 }
 
-# ---------------- S3 Policy: acesso público para website ----------------
+# ---------------- S3 Policy: acesso apenas via CloudFront OAC ----------------
 data "aws_iam_policy_document" "bucket_policy" {
   statement {
-    sid       = "PublicReadGetObject"
+    sid       = "AllowCloudFrontServicePrincipal"
     effect    = "Allow"
     actions   = ["s3:GetObject"]
     resources = ["${aws_s3_bucket.site.arn}/*"]
     principals {
-      type        = "*"
-      identifiers = ["*"]
+      type        = "Service"
+      identifiers = ["cloudfront.amazonaws.com"]
+    }
+    condition {
+      test     = "StringEquals"
+      variable = "AWS:SourceArn"
+      values   = [aws_cloudfront_distribution.cdn.arn]
     }
   }
 }
@@ -143,7 +148,10 @@ resource "aws_s3_bucket_policy" "this" {
   bucket = aws_s3_bucket.site.id
   policy = data.aws_iam_policy_document.bucket_policy.json
   
-  depends_on = [aws_s3_bucket_public_access_block.this]
+  depends_on = [
+    aws_s3_bucket_public_access_block.this,
+    aws_cloudfront_distribution.cdn
+  ]
 }
 
 # ---------------- Upload automático de TODOS os arquivos (exceto ocultos) ----------------
