@@ -98,12 +98,19 @@ resource "aws_cloudfront_distribution" "cdn" {
     }
   }
 
-  # TLS padrão do CloudFront (*.cloudfront.net)
+  # TLS customizado com certificado ACM ou padrão do CloudFront
   viewer_certificate {
-    cloudfront_default_certificate = true
+    # Se tiver domínio customizado, usa certificado ACM
+    acm_certificate_arn            = var.domain_name != "" ? var.acm_certificate_arn : null
+    ssl_support_method             = var.domain_name != "" ? "sni-only" : null
+    minimum_protocol_version       = var.domain_name != "" ? "TLSv1.2_2021" : null
+    
+    # Se não tiver domínio customizado, usa certificado padrão
+    cloudfront_default_certificate = var.domain_name == "" ? true : false
   }
 
-  # Sem aliases - usando apenas URL do CloudFront
+  # Aliases (domínios customizados)
+  aliases = var.domain_name != "" ? [var.domain_name] : []
 
   # (Opcional) Logging
   dynamic "logging_config" {

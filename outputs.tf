@@ -12,7 +12,17 @@ output "cloudfront_id" {
 
 output "website_url" {
   description = "URL do site via CloudFront"
+  value       = var.domain_name != "" ? "https://${var.domain_name}" : "https://${aws_cloudfront_distribution.cdn.domain_name}"
+}
+
+output "cloudfront_url" {
+  description = "URL padrão do CloudFront"
   value       = "https://${aws_cloudfront_distribution.cdn.domain_name}"
+}
+
+output "custom_domain_url" {
+  description = "URL do domínio customizado (se configurado)"
+  value       = var.domain_name != "" ? "https://${var.domain_name}" : "Domínio customizado não configurado"
 }
 
 output "s3_website_url" {

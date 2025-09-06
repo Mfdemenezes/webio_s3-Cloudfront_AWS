@@ -23,3 +23,16 @@ variable "enable_logging" {
   default     = false
   description = "Habilitar logs do CloudFront"
 }
+
+# Configurações para domínio customizado
+variable "domain_name" {
+  type        = string
+  default     = ""
+  description = "Domínio customizado para o CloudFront (ex: mfdemenezes.mbam.com.br)"
+}
+
+variable "acm_certificate_arn" {
+  type        = string
+  default     = ""
+  description = "ARN do certificado ACM para HTTPS do domínio customizado"
+}
