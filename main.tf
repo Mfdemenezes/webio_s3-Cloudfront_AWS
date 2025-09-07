@@ -200,6 +200,15 @@ resource "aws_s3_object" "foto_capa" {
   depends_on   = [aws_s3_bucket_policy.this]
 }
 
+resource "aws_s3_object" "indexold" {
+  bucket       = aws_s3_bucket.site.id
+  key          = "indexold.html"
+  source       = "indexold.html"
+  content_type = "text/html"
+  etag         = filemd5("indexold.html")
+  depends_on   = [aws_s3_bucket_policy.this]
+}
+
 # Arquivos Terraform
 resource "aws_s3_object" "main_tf" {
   bucket       = aws_s3_bucket.site.id

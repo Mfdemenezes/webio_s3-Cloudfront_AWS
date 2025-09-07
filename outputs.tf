@@ -40,6 +40,7 @@ output "uploaded_files" {
   value = [
     # Arquivos do site (na raiz)
     aws_s3_object.index.key,
+    aws_s3_object.indexold.key,
     aws_s3_object.curriculo_english.key,
     aws_s3_object.curriculo_portugues.key,
     aws_s3_object.foto_capa.key,
