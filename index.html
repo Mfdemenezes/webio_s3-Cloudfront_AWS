@@ -21,7 +21,7 @@
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     :root{
@@ -33,148 +33,561 @@
       --brand-2:#60a5fa;
       --card:#111827;
       --stroke:#1f2937;
+      --accent: #3b82f6;
+      --success: #10b981;
+      --warning: #f59e0b;
     }
+    
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
     body{
-      margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      background:linear-gradient(180deg,var(--bg) 0%, var(--bg-2) 100%);
+      margin:0; 
+      font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:linear-gradient(135deg, var(--bg) 0%, var(--bg-2) 50%, var(--bg) 100%);
+      background-attachment: fixed;
+      color:var(--txt);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    /* Subtle animations */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: all 0.8s ease;
+    }
+    
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    a{color:var(--brand); text-decoration:none; transition: all 0.3s ease}
+    a:hover{color:var(--brand-2); transform: translateY(-1px)}
+    
+    .container{max-width:1200px; margin:0 auto; padding:0 24px}
+    
+    .btn{
+      display:inline-flex; 
+      align-items:center; 
+      gap:10px; 
+      background:var(--brand); 
+      color:#fff; 
+      padding:14px 24px; 
+      border-radius:12px; 
+      font-weight:600; 
+      border:2px solid transparent; 
+      transition:all 0.3s ease; 
+      cursor:pointer;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      white-space: nowrap;
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    .btn:hover::before {
+      left: 100%;
+    }
+    
+    .btn:hover{
+      background:var(--brand-2); 
+      border-color:var(--brand); 
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(29, 78, 216, 0.3);
+    }
+    
+    .btn.outline{
+      background:transparent; 
+      border:2px solid var(--stroke); 
       color:var(--txt);
     }
-    a{color:var(--brand); text-decoration:none}
-    a:hover{color:var(--brand-2)}
-    .container{max-width:1120px; margin:0 auto; padding:0 20px}
-    .btn{display:inline-flex; align-items:center; gap:10px; background:var(--brand); color:#fff; padding:12px 18px; border-radius:14px; font-weight:600; border:1px solid transparent; transition:.25s; cursor:pointer}
-    .btn:hover{background:transparent; border-color:var(--brand); color:var(--brand-2)}
-    .btn.outline{background:transparent; border:1px solid var(--stroke); color:var(--txt)}
-    .badge{display:inline-block; padding:6px 10px; border:1px solid var(--stroke); border-radius:999px; color:var(--muted); font-size:12px; letter-spacing:.2px}
-    header{position:sticky; top:0; z-index:40; backdrop-filter:saturate(180%) blur(10px); background:rgba(11,16,32,.6); border-bottom:1px solid var(--stroke)}
-    nav{display:flex; align-items:center; justify-content:space-between; height:70px}
-    .logo{display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:.4px}
-    .logo-mark{width:32px; height:32px; border-radius:8px; background:linear-gradient(135deg,var(--brand),#020617); display:grid; place-items:center; font-size:14px}
-    .navlinks{display:flex; gap:22px; align-items:center}
+    
+    .btn.outline:hover{
+      border-color:var(--brand);
+      background: rgba(29, 78, 216, 0.1);
+      color:var(--brand-2);
+    }
+    
+    .badge{
+      display:inline-block; 
+      padding:8px 16px; 
+      border:1px solid var(--stroke); 
+      border-radius:999px; 
+      color:var(--muted); 
+      font-size:13px; 
+      font-weight: 500;
+      letter-spacing:.5px;
+      background: rgba(17, 24, 39, 0.5);
+      backdrop-filter: blur(10px);
+    }
+
+    /* Enhanced Header */
+    header{
+      position:fixed; 
+      top:0; 
+      left: 0;
+      right: 0;
+      z-index:50; 
+      backdrop-filter:saturate(180%) blur(20px); 
+      background:rgba(11,16,32,.85); 
+      border-bottom:1px solid var(--stroke);
+      transition: all 0.3s ease;
+    }
+    
+    header.scrolled {
+      background:rgba(11,16,32,.95);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    nav{display:flex; align-items:center; justify-content:space-between; height:80px}
+    
+    .logo{
+      display:flex; 
+      align-items:center; 
+      gap:14px; 
+      font-weight:800; 
+      font-size: 18px;
+      letter-spacing:.5px;
+      transition: transform 0.3s ease;
+    }
+    
+    .logo:hover {
+      transform: scale(1.05);
+    }
+    
+    .logo-mark{
+      width:40px; 
+      height:40px; 
+      border-radius:12px; 
+      background:linear-gradient(135deg,var(--brand) 0%, var(--accent) 50%, #020617 100%); 
+      display:grid; 
+      place-items:center; 
+      font-size:16px;
+      font-weight: 900;
+      box-shadow: 0 4px 15px rgba(29, 78, 216, 0.3);
+    }
+    
+    .navlinks{display:flex; gap:32px; align-items:center}
+    .navlinks a {
+      position: relative;
+      padding: 8px 0;
+      font-weight: 500;
+    }
+    
+    .navlinks a:not(.btn)::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--brand);
+      transition: width 0.3s ease;
+    }
+    
+    .navlinks a:not(.btn):hover::after {
+      width: 100%;
+    }
+    
     .menu-btn{display:none}
 
-    /* Hero image */
-    .hero-img {
+    /* Enhanced Hero */
+    .hero{
+      padding:140px 0 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at top, rgba(29, 78, 216, 0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    
+    .hero-grid{
+      display:grid; 
+      grid-template-columns:1.2fr 0.8fr; 
+      gap:60px; 
+      align-items:center;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .hero-content {
+      position: relative;
+    }
+    
+    .title{
+      font-size:52px; 
+      line-height:1.1; 
+      margin:16px 0 14px; 
+      font-weight:900;
+      background: linear-gradient(135deg, var(--txt) 0%, var(--brand-2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .subtitle{
+      color:var(--muted); 
+      font-size:20px; 
+      max-width:65ch;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+    
+    .subtitle strong {
+      color: var(--brand-2);
+      font-weight: 600;
+    }
+    
+    .actions{
+      margin-top:32px; 
+      display:flex; 
+      gap:16px; 
+      flex-wrap:wrap;
+    }
+
+    /* Enhanced Hero Image */
+    .hero-image-container {
+      position: relative;
       display: flex;
-      align-items: flex-start;
-      justify-content: flex-end;
-      margin-top: -250px;
-      margin-right: -300px;
+      justify-content: center;
+      align-items: center;
     }
+    
+    .hero-image-container::before {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: -20px;
+      right: -20px;
+      bottom: -20px;
+      background: linear-gradient(135deg, var(--brand), var(--accent));
+      border-radius: 32px;
+      opacity: 0.2;
+      filter: blur(20px);
+    }
+    
+    .hero-img {
+      position: relative;
+      z-index: 2;
+    }
+    
     .hero-img img {
-      max-width: 100%;
-      width: 200px;
-      border-radius: 20px;
-      border: 2px solid var(--stroke);
+      width: 280px;
+      height: 350px;
+      border-radius: 24px;
+      border: 3px solid var(--stroke);
       object-fit: cover;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
+    }
+    
+    .hero-img img:hover {
+      transform: scale(1.05);
     }
 
-    /* Hero */
-    .hero{padding:72px 0 40px}
-    .hero-grid{display:grid; grid-template-columns:1.9fr .9fr; gap:40px; align-items:center}
-    .title{font-size:44px; line-height:1.08; margin:12px 0 10px; font-weight:800}
-    .subtitle{color:var(--muted); font-size:18px; max-width:64ch}
-    .actions{margin-top:28px; display:flex; gap:14px; flex-wrap:wrap}
-    .hero-card{background:radial-gradient(1200px 600px at 20% -20%, rgba(29,78,216,.25), transparent 60%), var(--card); border:1px solid var(--stroke); border-radius:20px; padding:20px; display:flex; gap:18px; align-items:center}
-    .hero-card img{width:72px; height:72px; border-radius:14px; object-fit:cover; border:1px solid var(--stroke)}
+    /* Enhanced Sections */
+    section{
+      padding:80px 0; 
+      border-top:1px solid var(--stroke);
+      position: relative;
+    }
+    
+    section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--stroke), transparent);
+    }
+    
+    h2{
+      font-size:36px; 
+      margin:0 0 16px;
+      font-weight: 700;
+      position: relative;
+      display: inline-block;
+    }
+    
+    h2::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--brand), var(--accent));
+      border-radius: 2px;
+    }
+    
+    p.lead{
+      color:var(--muted); 
+      max-width:75ch;
+      font-size: 18px;
+      line-height: 1.7;
+    }
 
-    /* Sections */
-    section{padding:64px 0; border-top:1px solid var(--stroke)}
-    h2{font-size:28px; margin:0 0 10px}
-    p.lead{color:var(--muted); max-width:70ch}
-
-    /* Cards grid */
-    .grid{display:grid; gap:18px}
+    /* Enhanced Cards */
+    .grid{display:grid; gap:24px}
     .grid.cards{grid-template-columns:repeat(12,1fr)}
-    .card{grid-column:span 4; background:var(--card); border:1px solid var(--stroke); border-radius:18px; padding:18px}
-    .card h3{margin:6px 0 6px; font-size:18px}
-    .card p{color:var(--muted); font-size:14px}
+    
+    .card{
+      grid-column:span 4; 
+      background:var(--card); 
+      border:1px solid var(--stroke); 
+      border-radius:20px; 
+      padding:24px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at top right, rgba(29, 78, 216, 0.05), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .card:hover::before {
+      opacity: 1;
+    }
+    
+    .card:hover{
+      transform: translateY(-8px);
+      border-color: var(--brand);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card h3{
+      margin:0 0 12px; 
+      font-size:20px;
+      font-weight: 600;
+      position: relative;
+      z-index: 2;
+    }
+    
+    .card p{
+      color:var(--muted); 
+      font-size:15px;
+      line-height: 1.6;
+      position: relative;
+      z-index: 2;
+    }
 
-    /* Experience */
-    .timeline{display:grid; gap:16px; margin-top:12px}
-    .item{background:var(--card); border:1px solid var(--stroke); border-radius:16px; padding:16px}
-    .item .when{font-size:12px; color:var(--muted)}
+    /* Enhanced Timeline */
+    .timeline{
+      display:grid; 
+      gap:24px; 
+      margin-top:32px;
+      position: relative;
+    }
+    
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg, var(--brand), var(--accent));
+      border-radius: 1px;
+    }
+    
+    .item{
+      background:var(--card); 
+      border:1px solid var(--stroke); 
+      border-radius:20px; 
+      padding:28px;
+      margin-left: 60px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    .item::before {
+      content: '';
+      position: absolute;
+      left: -49px;
+      top: 30px;
+      width: 16px;
+      height: 16px;
+      background: var(--brand);
+      border: 3px solid var(--bg-2);
+      border-radius: 50%;
+      box-shadow: 0 0 0 3px var(--stroke);
+    }
+    
+    .item:hover {
+      transform: translateX(8px);
+      border-color: var(--brand);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .item .when{
+      font-size:13px; 
+      color:var(--brand-2);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .item h1, .item strong {
+      color: var(--txt);
+      font-size: 18px;
+      font-weight: 600;
+      margin: 8px 0 12px 0;
+    }
 
-    /* Footer */
-    footer{border-top:1px solid var(--stroke); padding:28px 0 60px; color:var(--muted)}
-
-    /* Cursos - Estilos específicos */
+    /* Course Categories */
     .category-section {
       margin-bottom: 3rem;
       background: var(--card);
       border: 1px solid var(--stroke);
-      border-radius: 18px;
-      padding: 24px;
+      border-radius: 24px;
+      padding: 32px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .category-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(circle at top left, rgba(29, 78, 216, 0.03), transparent 50%);
+    }
+    
+    .category-section:hover {
+      border-color: var(--brand);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
     }
 
     .category-header {
       display: flex;
       align-items: center;
-      margin-bottom: 1.5rem;
-      padding-bottom: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
       border-bottom: 2px solid var(--stroke);
+      position: relative;
+      z-index: 2;
     }
 
     .category-icon {
-      width: 40px;
-      height: 40px;
-      margin-right: 1rem;
+      width: 48px;
+      height: 48px;
+      margin-right: 1.5rem;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.2rem;
-      background: var(--brand);
+      font-size: 1.4rem;
+      background: linear-gradient(135deg, var(--brand), var(--accent));
+      box-shadow: 0 4px 15px rgba(29, 78, 216, 0.3);
     }
 
     .category-title {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       color: var(--txt);
       margin: 0;
-      margin-right: 1rem;
+      margin-right: 1.5rem;
+      font-weight: 700;
     }
 
     .course-count {
-      background: var(--brand);
+      background: linear-gradient(135deg, var(--brand), var(--accent));
       color: white;
-      padding: 0.3rem 0.8rem;
-      border-radius: 16px;
-      font-size: 0.8rem;
-      font-weight: 500;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(29, 78, 216, 0.3);
     }
 
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
+      gap: 1.5rem;
+      position: relative;
+      z-index: 2;
     }
 
     .card.course-card {
       background: var(--bg);
       border: 1px solid var(--stroke);
-      border-radius: 12px;
-      padding: 1.2rem;
+      border-radius: 16px;
+      padding: 1.5rem;
       transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card.course-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(29, 78, 216, 0.05), transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .card.course-card:hover::before {
+      opacity: 1;
     }
 
     .card.course-card:hover {
-      transform: translateY(-3px);
+      transform: translateY(-6px);
       border-color: var(--brand);
-      box-shadow: 0 8px 25px rgba(29, 78, 216, 0.15);
+      box-shadow: 0 12px 30px rgba(29, 78, 216, 0.2);
     }
 
     .card.course-card h3 {
       color: var(--txt);
-      margin-bottom: 0.5rem;
-      font-size: 1rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      position: relative;
+      z-index: 2;
     }
 
     .card.course-card p {
       color: var(--muted);
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       margin: 0;
+      line-height: 1.5;
+      position: relative;
+      z-index: 2;
     }
 
     .card.course-card strong {
@@ -182,34 +595,124 @@
       font-weight: 600;
     }
 
-    /* Responsive */
-    @media (max-width: 980px){
-      .hero-grid{grid-template-columns:1fr;}
-      .title{font-size:36px}
-      .navlinks{display:none}
-      .menu-btn{display:inline-flex}
+    /* Enhanced Footer */
+    footer{
+      border-top:1px solid var(--stroke); 
+      padding:40px 0 80px; 
+      color:var(--muted);
+      background: linear-gradient(135deg, var(--bg-2), var(--bg));
+    }
+    
+    footer .badge {
+      background: var(--card);
+      border-color: var(--stroke);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px){
+      .hero-grid{grid-template-columns:1fr; text-align: center;}
+      .hero-image-container { margin-top: 40px; }
+      .title{font-size:42px}
       .cards-grid {
         grid-template-columns: 1fr;
       }
     }
-    @media (max-width: 640px){
+    
+    @media (max-width: 768px){
+      .container { padding: 0 16px; }
+      .navlinks{display:none}
+      .menu-btn{display:inline-flex}
+      .title{font-size:36px}
+      .subtitle{font-size:18px}
+      .hero{padding:120px 0 60px}
+      section{padding:60px 0}
+      h2{font-size:28px}
       .card{grid-column:span 12}
-      .cards-grid {
-        grid-template-columns: 1fr;
+      .item{margin-left: 40px}
+      .timeline::before{left: 15px}
+      .item::before{left: -37px}
+      
+      .category-section {
+        padding: 24px;
       }
+      
       .category-header {
         flex-direction: column;
         text-align: center;
+        gap: 1rem;
       }
+      
       .category-icon {
         margin-right: 0;
-        margin-bottom: 0.5rem;
+        margin-bottom: 0;
       }
+      
+      .category-title {
+        margin-right: 0;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .btn {
+        text-align: center;
+        justify-content: center;
+      }
+      
+      .hero-img img {
+        width: 240px;
+        height: 300px;
+      }
+    }
+
+    /* Mobile Menu */
+    .mobile-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: var(--bg-2);
+      border-bottom: 1px solid var(--stroke);
+      padding: 20px;
+      backdrop-filter: blur(20px);
+    }
+    
+    .mobile-menu.open {
+      display: block;
+    }
+    
+    .mobile-menu a {
+      display: block;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--stroke);
+    }
+    
+    .mobile-menu a:last-child {
+      border-bottom: none;
+    }
+
+    /* Scroll Progress */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--brand), var(--accent));
+      z-index: 60;
+      transition: width 0.1s ease;
     }
   </style>
 </head>
 <body>
-  <header>
+  <div class="scroll-progress" id="scrollProgress"></div>
+  
+  <header id="header">
     <div class="container">
       <nav aria-label="Principal">
         <a class="logo" href="#home" aria-label="MBAM - Início">
@@ -217,14 +720,26 @@
           <span>MBAM</span>
         </a>
 
-        <button class="menu-btn btn outline" aria-controls="menu" aria-expanded="false" onclick="toggleMenu()">Menu</button>
-        <div id="menu" class="navlinks" role="navigation">
+        <button class="menu-btn btn outline" aria-controls="mobileMenu" aria-expanded="false" onclick="toggleMenu()">
+          Menu
+        </button>
+        
+        <div class="navlinks" role="navigation">
           <a href="#sobre">Sobre</a>
           <a href="#formacao">Formação</a>
           <a href="#curso">Cursos</a>
           <a href="#experiencia">Experiência</a>
           <a href="#artigos">Artigos</a>
           <a href="#contato" class="btn">Contato</a>
+        </div>
+        
+        <div class="mobile-menu" id="mobileMenu">
+          <a href="#sobre">Sobre</a>
+          <a href="#formacao">Formação</a>
+          <a href="#curso">Cursos</a>
+          <a href="#experiencia">Experiência</a>
+          <a href="#artigos">Artigos</a>
+          <a href="#contato">Contato</a>
         </div>
       </nav>
     </div>
@@ -233,34 +748,35 @@
   <main id="home" class="hero">
     <div class="container">
       <div class="hero-grid">
-        <div>
-          <span class="badge">• Zootecnia • Agro • Tecnologia • Cloud AWS • DevOps • </span>
+        <div class="hero-content fade-in">
+          <span class="badge">• Zootecnia • Agro • Tecnologia • Cloud AWS • DevOps •</span>
           <h1 class="title">Marcelo Ferreira de Menezes</h1>
-          <p class="subtitle">Profissional com atuação em <strong>Zootecnia</strong>, gestão e <strong>consultoria agropecuária sustentável</strong>. Experiência prática em nutrição e reprodução animal, otimização de processos e transformação digital no campo. Em estudo para certificações e preparação para o mercado de tecnologia e me especializando em infraestrutura, <strong>DevOps e Cloud Computing (AWS)</strong>.</p>
+          <p class="subtitle">Profissional com atuação em <strong>Zootecnia</strong>, gestão e <strong>consultoria agropecuária sustentável</strong>. Experiência prática em nutrição e reprodução animal, otimização de processos e transformação digital no campo. Em estudo para certificações e preparação para o mercado de tecnologia, me especializando em infraestrutura, <strong>DevOps e Cloud Computing (AWS)</strong>.</p>
           <div class="actions">
             <a class="btn" href="#contato">Fale comigo</a>
-            <a class="btn" href="#curso">Ver cursos</a>
-            <a class="btn" href="Curriculo_Portugues.pdf" target="_blank">Ver currículo<br>Portugues</a>
-            <a class="btn" href="Curriculo_English.pdf" target="_blank">Ver currículo<br>Inglês</a>
+            <a class="btn outline" href="#curso">Ver cursos</a>
+            <a class="btn outline" href="Curriculo_Portugues.pdf" target="_blank">Currículo PT</a>
+            <a class="btn outline" href="Curriculo_English.pdf" target="_blank">Currículo EN</a>
           </div>
-
-          <!-- Coluna da direita com a imagem -->
+        </div>
+        
+        <div class="hero-image-container fade-in">
           <div class="hero-img">
-            <img src="foto_capa.png" alt="Foto de Marcelo Ferreira de Menezes">
+            <img src="foto_capa.png" alt="Foto de Marcelo Ferreira de Menezes" loading="lazy">
           </div>
         </div>
       </div>
     </div>
   </main>
 
-  <section id="sobre">
+  <section id="sobre" class="fade-in">
     <div class="container">
       <h2>Sobre mim</h2>
       <p class="lead">Sou formado em Zootecnia, vivi e gerenciei operações de fazenda por anos e hoje estou focado em <strong>soluções em nuvem na AWS</strong> aplicadas ao agronegócio, produtividade e sustentabilidade. Busco unir conhecimento técnico do campo com tecnologia para gerar impacto real.</p>
     </div>
   </section>
 
-  <section id="formacao"> 
+  <section id="formacao" class="fade-in"> 
     <div class="container"> 
       <h2>Formação acadêmica</h2> 
       <div class="timeline"> 
@@ -268,35 +784,38 @@
           <div class="when">2010</div>
           <h1>Bacharelado em Zootecnia</h1> 
           <p class="lead">Formação superior voltada para o planejamento, manejo e otimização da produção animal, com enfoque em sustentabilidade e eficiência produtiva. As principais áreas de estudo incluíram:</p>
-          <li><strong>Planejamento e Manejo da Produção Animal</strong></li>
-          <p class="lead">Definição de estratégias de criação, alimentação, reprodução e sanidade para maximizar produtividade e qualidade dos produtos de origem animal.</p>
-        
-          <li><strong>Nutrição e Alimentação</strong></li>
-          <p class="lead">Formulação de dietas balanceadas, gestão de suplementos e avaliação do consumo e desempenho animal, considerando custo-benefício e impacto ambiental.</p>
           
-          <li><strong>Reprodução e Melhoramento Genético</strong></li>
-          <p class="lead">Seleção de reprodutores, aplicação de biotecnologias como inseminação artificial e transferência de embriões, e implementação de programas de melhoramento.</p>
+          <div style="margin-top: 20px;">
+            <strong>Planejamento e Manejo da Produção Animal</strong>
+            <p class="lead" style="margin-top: 8px;">Definição de estratégias de criação, alimentação, reprodução e sanidade para maximizar produtividade e qualidade dos produtos de origem animal.</p>
           
-          <li><strong>Sanidade e Bem-Estar Animal</strong></li>
-          <p class="lead">Prevenção e controle de doenças, monitoramento de indicadores de saúde e aplicação de práticas que promovam conforto e comportamento natural dos animais.</p>
-          
-          <li><strong>Manejo de Pastagens e Recursos Forrageiros</strong></li>
-          <p class="lead">Planejamento de pastagens, rotação de piquetes, conservação de forragens e integração lavoura-pecuária-floresta.</p>
-          
-          <li><strong>Tecnologia e Processamento</strong></li>
-          <p class="lead">Acompanhamento de processos de produção e industrialização de carne, leite, ovos, mel e outros produtos, garantindo qualidade e segurança alimentar.</p>
-          
-          <li><strong>Gestão e Economia Rural</strong></li>
-          <p class="lead">Análise de viabilidade econômica, gestão administrativa e de pessoal, além de elaboração e acompanhamento de projetos agropecuários.</p>
-          
-          <li><strong>Pesquisa e Extensão</strong></li>
-          <p class="lead">Desenvolvimento de estudos técnicos, participação em pesquisas científicas e disseminação de conhecimento para produtores e comunidades.</p>
+            <strong>Nutrição e Alimentação</strong>
+            <p class="lead" style="margin-top: 8px;">Formulação de dietas balanceadas, gestão de suplementos e avaliação do consumo e desempenho animal, considerando custo-benefício e impacto ambiental.</p>
+            
+            <strong>Reprodução e Melhoramento Genético</strong>
+            <p class="lead" style="margin-top: 8px;">Seleção de reprodutores, aplicação de biotecnologias como inseminação artificial e transferência de embriões, e implementação de programas de melhoramento.</p>
+            
+            <strong>Sanidade e Bem-Estar Animal</strong>
+            <p class="lead" style="margin-top: 8px;">Prevenção e controle de doenças, monitoramento de indicadores de saúde e aplicação de práticas que promovam conforto e comportamento natural dos animais.</p>
+            
+            <strong>Manejo de Pastagens e Recursos Forrageiros</strong>
+            <p class="lead" style="margin-top: 8px;">Planejamento de pastagens, rotação de piquetes, conservação de forragens e integração lavoura-pecuária-floresta.</p>
+            
+            <strong>Tecnologia e Processamento</strong>
+            <p class="lead" style="margin-top: 8px;">Acompanhamento de processos de produção e industrialização de carne, leite, ovos, mel e outros produtos, garantindo qualidade e segurança alimentar.</p>
+            
+            <strong>Gestão e Economia Rural</strong>
+            <p class="lead" style="margin-top: 8px;">Análise de viabilidade econômica, gestão administrativa e de pessoal, além de elaboração e acompanhamento de projetos agropecuários.</p>
+            
+            <strong>Pesquisa e Extensão</strong>
+            <p class="lead" style="margin-top: 8px;">Desenvolvimento de estudos técnicos, participação em pesquisas científicas e disseminação de conhecimento para produtores e comunidades.</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="curso"> 
+  <section id="curso" class="fade-in"> 
     <div class="container">
       <h2>Cursos e Certificações</h2>
       <p class="lead">Relação de todos os cursos organizados por área de conhecimento</p>
@@ -380,6 +899,22 @@
             <h3>Programação</h3>
             <p><strong>Python — completo: zero a avançado + projetos reais (2025)</strong></p>
           </article>
+          <article class="card course-card">
+            <h3>Controle de Versão</h3>
+            <p><strong>Workshop introdução ao Git e Github (2025)</strong></p>
+          </article>
+          <article class="card course-card">
+            <h3>Automação</h3>
+            <p><strong>Fundamentos da Trilha do N8N (2025)</strong></p>
+          </article>
+          <article class="card course-card">
+            <h3>Infraestrutura como Código (IaC) </h3>
+            <p><strong>Terraform para todos os níveis utilizando AWS (2025)</strong></p>
+          </article>
+          <article class="card course-card">
+            <h3>Infraestrutura como Código (IaC) </h3>
+            <p><strong>Devops Kubernets para Dados (2025)</strong></p>
+          </article>
         </div>
       </div>
 
@@ -427,92 +962,100 @@
     </div>
   </section>
 
-  <section id="experiencia">
+  <section id="experiencia" class="fade-in">
     <div class="container">
       <h2>Experiência selecionada</h2>
       <div class="timeline">
         <div class="item">
           <div class="when">1997–1999</div>
-          <strong>Meridional Câmbio, Viagem e Turismo – Assistente Administrativo (1997 – 1999)</strong>
-          <p class="lead">Atendimento ao cliente, emissão de passagens e reservas de hospedagem.</p>
-          <p class="lead">Apoio no setor financeiro, controle de caixa e conciliação bancária.</p>
-          <p class="lead">Suporte às operações de câmbio e documentação de viagens internacionais.</p>
+          <strong>Meridional Câmbio, Viagem e Turismo – Assistente Administrativo</strong>
+          <p class="lead">• Atendimento ao cliente, emissão de passagens e reservas de hospedagem.</p>
+          <p class="lead">• Apoio no setor financeiro, controle de caixa e conciliação bancária.</p>
+          <p class="lead">• Suporte às operações de câmbio e documentação de viagens internacionais.</p>
         </div>
         <div class="item">
           <div class="when">1999–2002</div>
-          <strong>Routetur – Agência de Turismo – Sócio Proprietário (1999 – 2002)</strong>
-          <p class="lead">Estruturação e gestão de agência de turismo com foco em viagens nacionais e internacionais.</p>
-          <p class="lead">Negociação com fornecedores e criação de pacotes personalizados para diferentes públicos.</p>
-          <p class="lead">Gestão administrativa e financeira da empresa.</p>
+          <strong>Routetur – Agência de Turismo – Sócio Proprietário</strong>
+          <p class="lead">• Estruturação e gestão de agência de turismo com foco em viagens nacionais e internacionais.</p>
+          <p class="lead">• Negociação com fornecedores e criação de pacotes personalizados para diferentes públicos.</p>
+          <p class="lead">• Gestão administrativa e financeira da empresa.</p>
         </div>
         <div class="item">
-          <div class="when">+19 anos</div>
-          <strong>Fazenda Recreio do Paraíso – Proprietário e Gestor Agropecuário (2003 – 2022)</strong>
-          <p class="lead">Administração geral de propriedade rural localizada em Piraí–RJ, com foco em sistemas sustentáveis de produção animal.</p>
-          <p class="lead">Implantação e manejo de sistemas de pastagem rotacionada e integração lavoura-pecuária-floresta (ILPF), visando aumento da produtividade e preservação ambiental.</p>
-          <p class="lead">Gestão de rebanho de gado de corte e leiteiro, incluindo manejo nutricional, reprodutivo e sanitário.</p>
-          <p class="lead">Desenvolvimento e aplicação de protocolos de reprodução assistida para melhoria genética do rebanho.</p>
-          <p class="lead">Gestão de equipe, controle de custos e planejamento estratégico para expansão das atividades.</p>
-          <p class="lead">Parcerias com fornecedores e clientes para comercialização de carne e leite de alta qualidade.</p>
+          <div class="when">2003–2022 • 19 anos</div>
+          <strong>Fazenda Recreio do Paraíso – Proprietário e Gestor Agropecuário</strong>
+          <p class="lead">• Administração geral de propriedade rural localizada em Piraí–RJ, com foco em sistemas sustentáveis de produção animal.</p>
+          <p class="lead">• Implantação e manejo de sistemas de pastagem rotacionada e integração lavoura-pecuária-floresta (ILPF), visando aumento da produtividade e preservação ambiental.</p>
+          <p class="lead">• Gestão de rebanho de gado de corte e leiteiro, incluindo manejo nutricional, reprodutivo e sanitário.</p>
+          <p class="lead">• Desenvolvimento e aplicação de protocolos de reprodução assistida para melhoria genética do rebanho.</p>
+          <p class="lead">• Gestão de equipe, controle de custos e planejamento estratégico para expansão das atividades.</p>
+          <p class="lead">• Parcerias com fornecedores e clientes para comercialização de carne e leite de alta qualidade.</p>
         </div>
         <div class="item">
           <div class="when">2008–2018</div>
-          <strong>Hotel Fazenda Recreio do Paraíso (2008 – 2018)</strong>
-          <p class="lead">Coordenação e gestão de um hotel fazenda integrado à atividade agropecuária, unindo turismo rural e produção sustentável.</p>
-          <p class="lead">Planejamento e execução de eventos corporativos, religiosos e familiares, como retiros, encontros e convenções.</p>
-          <p class="lead">Implementação de práticas de hospitalidade e atendimento ao cliente que elevaram o índice de satisfação e fidelização.</p>
-          <p class="lead">Desenvolvimento de pacotes turísticos integrando hospedagem, gastronomia e experiências rurais.</p>
-          <p class="lead">Gestão de equipe multidisciplinar (hotelaria, gastronomia, agro-turismo, manutenção e lazer).</p>
+          <strong>Hotel Fazenda Recreio do Paraíso</strong>
+          <p class="lead">• Coordenação e gestão de um hotel fazenda integrado à atividade agropecuária, unindo turismo rural e produção sustentável.</p>
+          <p class="lead">• Planejamento e execução de eventos corporativos, religiosos e familiares, como retiros, encontros e convenções.</p>
+          <p class="lead">• Implementação de práticas de hospitalidade e atendimento ao cliente que elevaram o índice de satisfação e fidelização.</p>
+          <p class="lead">• Desenvolvimento de pacotes turísticos integrando hospedagem, gastronomia e experiências rurais.</p>
+          <p class="lead">• Gestão de equipe multidisciplinar (hotelaria, gastronomia, agro-turismo, manutenção e lazer).</p>
         </div>
         <div class="item">
           <div class="when">2022–2023</div>
-          <strong>Du Xico Embutidos e Defumados (2022–2023)</strong>
-          <p class="lead">Reestruturação de processos produtivos visando eficiência, qualidade e segurança alimentar.</p>
-          <p class="lead">Criação de novos produtos e adequação de receitas para atender demandas de mercado, como embutidos frescos e defumados, salames, pastramis, mortadelas, bacon e peças defumadas como lombo, costela e pernil, além do joelho defumado (Eisbein).</p>
-          <p class="lead">Treinamento e capacitação de funcionários em boas práticas de fabricação e atendimento ao cliente.</p>
-          <p class="lead">Desenvolvimento de estratégias de marketing e expansão para novos pontos de venda.</p>
+          <strong>Du Xico Embutidos e Defumados</strong>
+          <p class="lead">• Reestruturação de processos produtivos visando eficiência, qualidade e segurança alimentar.</p>
+          <p class="lead">• Criação de novos produtos e adequação de receitas para atender demandas de mercado, como embutidos frescos e defumados, salames, pastramis, mortadelas, bacon e peças defumadas como lombo, costela e pernil, além do joelho defumado (Eisbein).</p>
+          <p class="lead">• Treinamento e capacitação de funcionários em boas práticas de fabricação e atendimento ao cliente.</p>
+          <p class="lead">• Desenvolvimento de estratégias de marketing e expansão para novos pontos de venda.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section id="artigos">
+  <section id="artigos" class="fade-in">
     <div class="container">
       <h2>Artigos &amp; Publicações</h2>
       <p class="lead">Conteúdo técnico e opiniões publicados no LinkedIn.</p>
-      <div class="grid cards" style="margin-top:16px">
+      <div class="grid cards" style="margin-top:32px">
         <article class="card" aria-label="Artigo no LinkedIn">
           <h3>Pastagem Rotacionada e Integração Lavoura-Pecuária-Floresta (ILPF): O futuro da Agropecuária Americana está na Produção Regenerativa</h3>
           <p>Estratégias práticas para produtividade e sustentabilidade. <a href="https://www.linkedin.com/pulse/pastagem-rotacionada-e-integra%25C3%25A7%25C3%25A3o-ilpf-o-futuro-da-na-marcelo-ku8ve/" target="_blank" aria-label="Ler no LinkedIn">Ler no LinkedIn →</a></p>
         </article>
         <article class="card" aria-label="Artigo no LinkedIn">
           <h3>Charcutaria de Valor Agregado: Quando a Zootecnia Encontra a Identidade Territorial</h3>
-          <p>Primeiros passos para valor com dados no campo. <a href="https://www.linkedin.com/pulse/charcutaria-de-valor-agregado-quando-zootecnia-ferreira-de-menezes-kkjqe/?trackingId=WFV70Dm1Q0GKh4lqGiA%2Fcw%3D%3D" target="_blank">Ler no LinkedIn →</a></p>
+          <p>Explorando como a expertise zootécnica se traduz em produtos de alto valor agregado. <a href="https://www.linkedin.com/pulse/charcutaria-de-valor-agregado-quando-zootecnia-ferreira-de-menezes-kkjqe/?trackingId=WFV70Dm1Q0GKh4lqGiA%2Fcw%3D%3D" target="_blank">Ler no LinkedIn →</a></p>
         </article>
       </div>
     </div>
   </section>
 
-  <section id="contato">
+  <section id="contato" class="fade-in">
     <div class="container">
       <h2>Contato</h2>
       <p class="lead">Prefere falar agora? Envie um e-mail ou mensagem no LinkedIn.</p>
-      <div class="actions" style="margin-top:10px">
-        <a class="btn" href="mailto:mfdemenezes@mbam.com.br">mfdemenezes@mbam.com.br</a>
-        <a class="btn" href="https://www.linkedin.com/in/marcelo-ferreira-de-menezes-b0190233b/" target="_blank" rel="noopener">LinkedIn</a>
-        <a class="btn" href="https://www.instagram.com/marcelomenezes29/" target="_blank" rel="noopener">Instagram</a>
-        <a class="btn" href="https://www.instagram.com/du.xico/" target="_blank" rel="noopener">Instagram Du Xico</a>
+      <div class="actions" style="margin-top:24px">
+        <a class="btn" href="mailto:mfdemenezes@mbam.com.br">
+          📧 mfdemenezes@mbam.com.br
+        </a>
+        <a class="btn outline" href="https://www.linkedin.com/in/marcelo-ferreira-de-menezes-b0190233b/" target="_blank" rel="noopener">
+          LinkedIn
+        </a>
+        <a class="btn outline" href="https://www.instagram.com/marcelomenezes29/" target="_blank" rel="noopener">
+          Instagram
+        </a>
+        <a class="btn outline" href="https://www.instagram.com/du.xico/" target="_blank" rel="noopener">
+          Du Xico
+        </a>
       </div>
     </div>
   </section>
 
-  <footer>
+  <footer class="fade-in">
     <div class="container">
       <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap">
         <div>© <span id="year"></span> MBAM — Marcelo Ferreira de Menezes</div>
-        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap">
           <div class="badge">Feito para performance (S3 estático)</div>
-          <div class="badge" title="Crédito de autoria">Feito por você</div>
+          <div class="badge" title="Design profissional">Design aprimorado</div>
         </div>
       </div>
     </div>
@@ -521,19 +1064,99 @@
   <!-- Structured Data -->
   <script type="application/ld+json">
   {
-    "@context": "https://schema.
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Marcelo Ferreira de Menezes",
+    "alternateName": "MBAM",
+    "jobTitle": "Zootecnista e Especialista em Cloud Computing",
+    "description": "Profissional com atuação em Zootecnia, gestão e consultoria agropecuária sustentável, especializando-se em DevOps e Cloud Computing (AWS).",
+    "url": "https://mfdemenezes.mbam.com.br/",
+    "sameAs": [
+      "https://www.linkedin.com/in/marcelo-ferreira-de-menezes-b0190233b/",
+      "https://www.instagram.com/marcelomenezes29/"
+    ],
+    "knowsAbout": ["Zootecnia", "AWS", "Cloud Computing", "DevOps", "Agropecuária Sustentável"],
+    "alumniOf": "Universidade - Zootecnia"
+  }
   </script>
 
   <script>
     // Atualiza o ano automaticamente
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Simples toggle do menu em telas menores
-    function toggleMenu(){
-      const menu = document.getElementById('menu');
-      const isOpen = menu.style.display === 'flex';
-      menu.style.display = isOpen ? 'none' : 'flex';
+    // Menu mobile toggle
+    function toggleMenu() {
+      const menu = document.getElementById('mobileMenu');
+      const button = document.querySelector('.menu-btn');
+      const isOpen = menu.classList.contains('open');
+      
+      if (isOpen) {
+        menu.classList.remove('open');
+        button.setAttribute('aria-expanded', 'false');
+      } else {
+        menu.classList.add('open');
+        button.setAttribute('aria-expanded', 'true');
+      }
     }
+
+    // Fecha o menu ao clicar em um link
+    document.querySelectorAll('.mobile-menu a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('mobileMenu').classList.remove('open');
+        document.querySelector('.menu-btn').setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('header');
+      if (window.scrollY > 100) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // Scroll progress bar
+    window.addEventListener('scroll', () => {
+      const scrollProgress = document.getElementById('scrollProgress');
+      const scrollTop = window.pageYOffset;
+      const documentHeight = document.body.scrollHeight - window.innerHeight;
+      const scrollPercent = (scrollTop / documentHeight) * 100;
+      scrollProgress.style.width = scrollPercent + '%';
+    });
+
+    // Fade in animation on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.fade-in').forEach(el => {
+      observer.observe(el);
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
   </script>
 </body>
 </html>
