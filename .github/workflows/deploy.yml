@@ -108,7 +108,7 @@ jobs:
 
   terraform-apply:
     name: 🚀 Terraform Apply
-    if: github.ref == 'refs/heads/main' && needs.terraform-check.result == 'success'
+    if: github.event_name == 'workflow_dispatch' && needs.terraform-check.result == 'success'
     runs-on: ubuntu-latest
     environment: production
     needs: [terraform-check]
